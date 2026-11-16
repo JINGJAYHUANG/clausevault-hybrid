@@ -1,0 +1,14 @@
+{
+  "name": "clausevault-firebase-hybrid-ai",
+  "version": "2.0.0",
+  "description": "ClauseVault Hybrid — On-Device Reversible PII Vault + Firebase AI Logic Hybrid Contract & Financial Risk Copilot (#BuildHybridAI 2026)",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/hybrid_router.test.mjs",
+    "serve:python": "python3 -m http.server 8080 --directory web"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

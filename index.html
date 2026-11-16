@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClauseVault Hybrid — Firebase AI Logic On-Device &amp; Cloud Contract Risk Copilot</title>
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js",
+        "firebase/app-check": "https://www.gstatic.com/firebasejs/12.6.0/firebase-app-check.js",
+        "firebase/ai": "https://www.gstatic.com/firebasejs/12.6.0/firebase-ai.js"
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="./web/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-block">
+      <div class="eyebrow">#BuildHybridAI 2026 · Firebase AI Logic v12.6.0 + Chrome Built-in AI</div>
+      <h1>ClauseVault Hybrid</h1>
+      <p class="subtitle">
+        Reversible On-Device PII Vault (<code>only_on_device</code>) + Sanitized Cross-Clause Synthesis (<code>prefer_on_device</code> &rarr; Gemini 2.5 Flash)
+      </p>
+    </div>
+    <div class="topbar-actions">
+      <div id="nano-probe-chip" class="status-chip">Probing window.LanguageModel...</div>
+      <button id="btn-warmup-nano" class="btn btn-emerald" type="button">Warm Up Gemini Nano</button>
+      <button id="btn-open-config" class="btn btn-outline" type="button">Firebase Session Config</button>
+      <div id="route-pill" class="route-pill route-local">ROUTE: INITIALIZING</div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="control-bar" aria-label="Hybrid Inference Controls">
+      <div class="control-group grow">
+        <label for="case-select">Preset Contract / Schedule</label>
+        <select id="case-select"></select>
+      </div>
+      <div class="control-group">
+        <label for="mode-select">Firebase AI Logic <code>mode</code></label>
+        <select id="mode-select">
+          <option value="prefer_on_device">prefer_on_device (Hybrid Default)</option>
+          <option value="only_on_device">only_on_device (Strict Local Lock)</option>
+          <option value="prefer_in_cloud">prefer_in_cloud (Sanitized Cloud)</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label for="runtime-profile">Judge Runtime / Simulation</label>
+        <select id="runtime-profile">
+          <option value="auto_live">Live Browser + Session Firebase SDK</option>
+          <option value="preview_hybrid_warm">Deterministic Preview: Warm Gemini Nano + Cloud Escalation</option>
+          <option value="preview_nano_cold">Deterministic Preview: Cold Nano &rarr; Cloud Fallback</option>
+        </select>
+      </div>
+      <div class="control-toggles">
+        <label class="checkbox-label">
+          <input type="checkbox" id="toggle-offline" />
+          <span>Offline Mode</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="toggle-masked" checked />
+          <span>Mask Rehydrated PII</span>
+        </label>
+      </div>
+      <div class="control-buttons">
+        <button id="btn-analyze" class="btn btn-primary" type="button">Run Hybrid Analysis</button>
+        <button id="btn-export-md" class="btn btn-ghost" type="button">Export Redlines (.md)</button>
+        <button id="btn-export-json" class="btn btn-ghost" type="button">Export Proof (.json)</button>
+      </div>
+    </section>
+
+    <section class="telemetry-strip" aria-label="Real-Time Hybrid Telemetry">
+      <article class="metric-card">
+        <span class="metric-label">Exact Route Taken</span>
+        <strong id="m-route" class="metric-value">-</strong>
+        <span id="m-reason" class="metric-sub">-</span>
+      </article>
+      <article class="metric-card">
+        <span class="metric-label">SDK Mode / Inference Source</span>
+        <strong id="m-sdk-source" class="metric-value">-</strong>
+        <span id="m-backend" class="metric-sub">-</span>
+      </article>
+      <article class="metric-card">
+        <span class="metric-label">Token Estimate vs Nano Window</span>
+        <strong id="m-tokens" class="metric-value">-</strong>
+        <span id="m-clauses" class="metric-sub">-</span>
+      </article>
+      <article class="metric-card">
+        <span class="metric-label">Reversible Local PII Vault</span>
+        <strong id="m-vault" class="metric-value">-</strong>
+        <span id="m-egress" class="metric-sub">-</span>
+      </article>
+      <article class="metric-card">
+        <span class="metric-label">BigInt Schedule Variance</span>
+        <strong id="m-exposure" class="metric-value">-</strong>
+        <span id="m-risk-tier" class="metric-sub">-</span>
+      </article>
+      <article class="metric-card">
+        <span class="metric-label">Privacy Boundary Proof (SHA-256)</span>
+        <strong id="m-proof-status" class="metric-value">-</strong>
+        <span id="m-proof-hash" class="metric-sub mono">-</span>
+      </article>
+    </section>
+
+    <section class="workbench-grid">
+      <div class="pane">
+        <div class="pane-header">
+          <div>
+            <h2>1. Raw Sensitive Clauses (Client RAM Only)</h2>
+            <span class="pane-caption">Editable input · Pre-redaction Luhn / IBAN mod-97 / ABA mod-10</span>
+          </div>
+          <span class="tag tag-local">0 B Egress</span>
+        </div>
+        <textarea id="raw-clause-editor" spellcheck="false" aria-label="Raw Contract Clauses"></textarea>
+        <div class="vault-drawer">
+          <div class="drawer-title">Local Reversible Vault Map (<span id="vault-chip-count">0</span> tokens held in RAM)</div>
+          <div id="vault-chip-list" class="chip-list"></div>
+        </div>
+      </div>
+
+      <div class="pane">
+        <div class="pane-header">
+          <div>
+            <h2>2. Sanitized Wire &amp; Firebase AI Logic Inspector</h2>
+            <span class="pane-caption">Outbound payload verified by <code>assertSanitizedForCloud()</code></span>
+          </div>
+          <span id="firewall-badge" class="tag tag-pass">FIREWALL: PASS</span>
+        </div>
+        <pre id="sanitized-wire-view" class="code-view"></pre>
+        <div class="sdk-drawer">
+          <div class="drawer-title">Active <code>firebase/ai</code> Runtime Config</div>
+          <pre id="sdk-config-view" class="code-view compact"></pre>
+        </div>
+      </div>
+
+      <div class="pane">
+        <div class="pane-header">
+          <div>
+            <h2>3. Locally Rehydrated Synthesis &amp; Redlines</h2>
+            <span class="pane-caption">Structured JSON schema + BigInt cent-exact verification</span>
+          </div>
+          <span id="risk-badge" class="tag tag-low">LOW RISK</span>
+        </div>
+        <div id="synthesis-view" class="synthesis-body"></div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="config-modal" class="modal">
+    <form id="config-form" method="dialog" class="modal-card">
+      <div class="modal-header">
+        <div>
+          <h3>Firebase AI Logic Session Configuration</h3>
+          <p>Stored strictly in tab <code>sessionStorage</code> (wiped automatically on tab close; never written to disk or <code>localStorage</code>).</p>
+        </div>
+        <button id="btn-close-modal" class="btn btn-ghost" type="button">Close</button>
+      </div>
+      <div class="modal-body">
+        <label class="field">
+          <span>Paste Firebase Web Config JSON (Optional quick-fill)</span>
+          <textarea id="cfg-json-paste" rows="3" placeholder='{"apiKey":"...","projectId":"...","appId":"...","authDomain":"..."}'></textarea>
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span>Firebase Web <code>apiKey</code> *</span>
+            <input id="cfg-api-key" type="password" autocomplete="off" placeholder="Session-only Firebase Web API Key" />
+          </label>
+          <label class="field">
+            <span>Firebase <code>projectId</code> *</span>
+            <input id="cfg-project-id" type="text" autocomplete="off" placeholder="your-firebase-project-id" />
+          </label>
+        </div>
+        <div class="field-row">
+          <label class="field">
+            <span>Firebase <code>appId</code> *</span>
+            <input id="cfg-app-id" type="text" autocomplete="off" placeholder="1:1234567890:web:abcdef" />
+          </label>
+          <label class="field">
+            <span>Cloud Fallback Model</span>
+            <input id="cfg-cloud-model" type="text" value="gemini-2.5-flash" />
+          </label>
+        </div>
+        <label class="field">
+          <span>Optional App Check ReCaptcha Enterprise Site Key</span>
+          <input id="cfg-appcheck-key" type="text" autocomplete="off" placeholder="Optional reCAPTCHA Enterprise key" />
+        </label>
+        <div id="cfg-status-msg" class="modal-status">No session credentials loaded (running local Chrome Nano / Deterministic Shield).</div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-wipe-session" class="btn btn-danger" type="button">Wipe Session Credentials</button>
+        <button id="btn-save-session" class="btn btn-primary" type="submit">Connect Firebase AI Logic</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="./web/app.mjs"></script>
+</body>
+</html>
